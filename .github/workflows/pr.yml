@@ -11,7 +11,9 @@ jobs:
       with:
         submodules: true
 
-    - run: echo "current dir (from bash): $(pwd)"
+    - name: bash pwd
+      run: |
+        echo "current dir (from bash): $(pwd)"
 
     - uses: actions/setup-python@v5
       with:

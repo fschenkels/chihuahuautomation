@@ -1,6 +1,6 @@
 # repo-automation
 
-This is framework for automating common git repositories workflows in Python. Even though the current implenentation works out of the box with github actions, the solution is vendor agnostic (see [how to use it with different vendors]() for more info).
+This is repo is still at its initial state. Once I get a minimally functional version I will document it properly.
 
 ## How it works
 TBD.

@@ -1,0 +1,19 @@
+name: Pull Request Automation
+
+on:
+  workflow_call:
+
+jobs:
+  pr-event:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - run: echo "current dir (from bash): $(pwd)"
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.13' 
+    - run: python repo-automation/automation_entry_point.py

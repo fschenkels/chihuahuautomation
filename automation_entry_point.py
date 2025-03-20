@@ -14,7 +14,7 @@ if __name__ == "__main__":
     for module in glob.iglob("*.py", root_dir="automation"):
         print(f"Found module: {module}")
         imported_modules.append(
-            importlib.import_module(module)
+            importlib.import_module(module.replace(".py", ""))
         )
 
     pr_subclasses = [

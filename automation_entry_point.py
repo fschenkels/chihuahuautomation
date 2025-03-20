@@ -32,5 +32,5 @@ if __name__ == "__main__":
 
     for subclass in pr_subclasses:
         print(
-            f"{type(subclass)} says: {subclass().are_you_alive()}"
+            f"{subclass} says: {subclass().are_you_alive()}"
         )

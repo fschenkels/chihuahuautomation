@@ -25,6 +25,7 @@ if __name__ == "__main__":
             cls for _, cls in inspect.getmembers(
                 imported_module, inspect.isclass
             ) if issubclass(cls, PRAutomationTemplate)
+            and not cls is PRAutomationTemplate
         ])
 
     print(f"subclasses are: {str(pr_subclasses)}")

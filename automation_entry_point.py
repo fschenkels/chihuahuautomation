@@ -4,12 +4,13 @@ import glob
 import inspect
 import importlib
 
-#sys.path.insert(0, "automation")
 #automation_module = importlib.import_module("automation")
 #framework_module = importlib.import_module("framework.pr_automation_template")
 
 #from framework_module import PRAutomationTemplate
-from automation.framework.pr_automation_template import PRAutomationTemplate
+
+sys.path.insert(0, "automation")
+from framework.pr_automation_template import PRAutomationTemplate
 
 if __name__ == "__main__":
     print(f"current dir is: {os.getcwd()}")

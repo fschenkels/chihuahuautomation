@@ -14,7 +14,7 @@ from framework.pr_automation_template import PRAutomationTemplate
 if __name__ == "__main__":
     print(f"current dir is: {os.getcwd()}")
 
-    for module in glob.iglob("*.py"):
+    for module in glob.iglob("automation/*.py"):
         print(f"Found module: {module}")
 
     #subcls = [cls for _, cls in inspect.getmembers(automation_module, inspect.isclass) if issubclass(cls, framework_module.PRAutomationTemplate)]

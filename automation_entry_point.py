@@ -4,7 +4,7 @@ import glob
 import inspect
 import importlib
 
-sys.path.insert(0, "automation")
+#sys.path.insert(0, "automation")
 #automation_module = importlib.import_module("automation")
 #framework_module = importlib.import_module("framework.pr_automation_template")
 

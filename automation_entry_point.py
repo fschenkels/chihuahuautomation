@@ -11,7 +11,7 @@ if __name__ == "__main__":
     print(f"current dir is: {os.getcwd()}")
 
     imported_modules = list()
-    for module in glob.iglob("automation/*.py"):
+    for module in glob.iglob("*.py", root_dir="automation"):
         print(f"Found module: {module}")
         imported_modules.append(
             importlib.import_module(module)

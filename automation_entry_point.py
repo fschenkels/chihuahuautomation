@@ -4,20 +4,23 @@ import glob
 import inspect
 import importlib
 
-#automation_module = importlib.import_module("automation")
-#framework_module = importlib.import_module("framework.pr_automation_template")
-
-#from framework_module import PRAutomationTemplate
-
 sys.path.insert(0, "automation")
 from framework.pr_automation_template import PRAutomationTemplate
 
 if __name__ == "__main__":
     print(f"current dir is: {os.getcwd()}")
 
+    imported_modules = list()
     for module in glob.iglob("automation/*.py"):
         print(f"Found module: {module}")
+        imported_modules.append(
+            importlib.import_module(module)
+        )
 
-    #subcls = [cls for _, cls in inspect.getmembers(automation_module, inspect.isclass) if issubclass(cls, framework_module.PRAutomationTemplate)]
-    #subcls = [cls for _, cls in inspect.getmembers(automation_module, inspect.isclass) if issubclass(cls, PRAutomationTemplate)]
-    #print(f"subclasses are: {str(subcls)}")
+    pr_subclasses = [
+        cls for _, cls in inspect.getmembers(
+            automation_module, inspect.isclass
+        ) if issubclass(cls, PRAutomationTemplate)
+    ]
+
+    print(f"subclasses are: {str(pr_subclasses)}")

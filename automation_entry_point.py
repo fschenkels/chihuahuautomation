@@ -9,7 +9,7 @@ import importlib
 #framework_module = importlib.import_module("framework.pr_automation_template")
 
 #from framework_module import PRAutomationTemplate
-from framework.pr_automation_template import PRAutomationTemplate
+from automation.framework.pr_automation_template import PRAutomationTemplate
 
 if __name__ == "__main__":
     print(f"current dir is: {os.getcwd()}")

@@ -29,3 +29,8 @@ if __name__ == "__main__":
         ])
 
     print(f"subclasses are: {str(pr_subclasses)}")
+
+    for subclass in pr_subclasses:
+        print(
+            f"{type(subclass)} says: {subclass().are_you_alive()}"
+        )

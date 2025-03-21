@@ -18,7 +18,7 @@ sys.path.insert(0, USER_FOLDER)
 # imports the ABC meant as interface with the user's code
 from framework.pr_automation_template import PRAutomationTemplate
 
-def import_users_concrete_implementationsabcs(abcs: list):
+def import_users_concrete_implementations(abcs: list):
     """Returns a list of touples containing the user's concrete classes and
     their respective modules"""
     classes_and_modules = list()
@@ -39,18 +39,18 @@ def import_users_concrete_implementationsabcs(abcs: list):
                 ) if issubclass(cls, abc) and not cls is abc
             ]
 
-            print(f"implementations found: {str(implementations_found)}")
+            logging.debug(f"implementations found: {str(implementations_found)}")
             classes_and_modules.extend(implementations_found)
 
     return classes_and_modules
 
 
 if __name__ == "__main__":
-    print(f"current dir is: {os.getcwd()}")
+    logging.debug(f"current dir is: {os.getcwd()}")
 
     for concrete_class, _ in import_users_concrete_implementationsabcs(
         [PRAutomationTemplate]
     ):
-        print(
+        logging.info(
             f"{concrete_class} says: {concrete_class().are_you_alive()}"
         )

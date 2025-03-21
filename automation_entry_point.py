@@ -8,7 +8,7 @@ import importlib
 USER_FOLDER = "automation"
 
 logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    format="%(asctime)s - %(levelname)s - %(message)s",
     level=logging.DEBUG
 )
 

@@ -24,7 +24,6 @@ def import_users_concrete_implementations(abcs: list):
     classes_and_modules = list()
 
     logging.info(f"Importing concrete implementations from '{USER_FOLDER}'...")
-    logging.debug(f"Searching for python modules inside of '{USER_FOLDER}'...")
     for module in glob.iglob("*.py", root_dir=USER_FOLDER):
         logging.debug(f"Found module: {module}")
         imported_module = importlib.import_module(

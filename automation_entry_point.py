@@ -2,35 +2,52 @@ import os
 import sys
 import glob
 import inspect
+import logging
 import importlib
 
-sys.path.insert(0, "automation")
+USER_FOLDER = "automation"
+
+logging.basicConfig(level=logging.DEBUG)
+
+# add the user's folder to the path, this is a dependency to everything else
+sys.path.insert(0, USER_FOLDER)
+
+# imports the ABC meant as interface with the user's code
 from framework.pr_automation_template import PRAutomationTemplate
+
+def import_users_concrete_implementationsabcs(abcs: list):
+    """Returns a list of touples containing the user's concrete classes and
+    their respective modules"""
+    classes_and_modules = list()
+
+    logging.info("Importing concrete implementations from '{USER_FOLDER}'...")
+    logging.debug("Searching for python modules inside of '{USER_FOLDER}'...")
+    for module in glob.iglob("*.py", root_dir=USER_FOLDER):
+        logging.debug(f"Found module: {module}")
+        imported_module = importlib.import_module(
+            module.replace(".py", "")
+        )
+
+        for abc in abcs:
+            logging.debug(f"reading implementations of {abc}...")
+            implementations_found = [
+                (cls, imported_module) for _, cls in inspect.getmembers(
+                    imported_module, inspect.isclass
+                ) if issubclass(cls, abc) and not cls is abc
+            ]
+
+            print(f"implementations found: {str(implementations_found)}")
+            classes_and_modules.extend(implementations_found)
+
+    return classes_and_modules
+
 
 if __name__ == "__main__":
     print(f"current dir is: {os.getcwd()}")
 
-    pr_subclasses = list()
-    imported_modules = list()
-    for module in glob.iglob("*.py", root_dir="automation"):
-        print(f"Found module: {module}")
-        imported_module = importlib.import_module(
-            module.replace(".py", "")
-        )
-        imported_modules.append(
-            imported_module
-        )
-
-        pr_subclasses.extend([
-            cls for _, cls in inspect.getmembers(
-                imported_module, inspect.isclass
-            ) if issubclass(cls, PRAutomationTemplate)
-            and not cls is PRAutomationTemplate
-        ])
-
-    print(f"subclasses are: {str(pr_subclasses)}")
-
-    for subclass in pr_subclasses:
+    for concrete_class, _ in import_users_concrete_implementationsabcs(
+        [PRAutomationTemplate]
+    ):
         print(
-            f"{subclass} says: {subclass().are_you_alive()}"
+            f"{concrete_class} says: {concrete_class().are_you_alive()}"
         )

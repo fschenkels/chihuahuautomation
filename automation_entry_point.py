@@ -7,7 +7,10 @@ import importlib
 
 USER_FOLDER = "automation"
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.DEBUG
+)
 
 # add the user's folder to the path, this is a dependency to everything else
 sys.path.insert(0, USER_FOLDER)
@@ -20,8 +23,8 @@ def import_users_concrete_implementationsabcs(abcs: list):
     their respective modules"""
     classes_and_modules = list()
 
-    logging.info("Importing concrete implementations from '{USER_FOLDER}'...")
-    logging.debug("Searching for python modules inside of '{USER_FOLDER}'...")
+    logging.info(f"Importing concrete implementations from '{USER_FOLDER}'...")
+    logging.debug(f"Searching for python modules inside of '{USER_FOLDER}'...")
     for module in glob.iglob("*.py", root_dir=USER_FOLDER):
         logging.debug(f"Found module: {module}")
         imported_module = importlib.import_module(

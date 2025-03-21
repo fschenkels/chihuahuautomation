@@ -48,7 +48,7 @@ def import_users_concrete_implementations(abcs: list):
 if __name__ == "__main__":
     logging.debug(f"current dir is: {os.getcwd()}")
 
-    for concrete_class, _ in import_users_concrete_implementationsabcs(
+    for concrete_class, _ in import_users_concrete_implementations(
         [PRAutomationTemplate]
     ):
         logging.info(

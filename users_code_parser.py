@@ -18,7 +18,7 @@ class UsersCodeParser:
     def __init__(self):
         self.classes_and_modules = self.__parse_classes_and_modules()
 
-    def get_implementations_of(abc):
+    def get_implementations_of(self, abc):
         return [
             cls for cls, _ in self.classes_and_modules.get(
                 abc, []

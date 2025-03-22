@@ -9,16 +9,16 @@ class GithubContext:
             default=dict()
         )
 
-    def is_pr():
+    def is_pr(self):
         """Verify if the current event is PR related"""
         return True
         #return False
 
-    def is_push():
+    def is_push(self):
         """Verify if the current event is push related"""
         return False
 
-    def is_scheduled():
+    def is_scheduled(self):
         """Verify if the current event is scheduled"""
         return False
 

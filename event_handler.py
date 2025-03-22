@@ -1,6 +1,7 @@
 import sys
 
 from github import GithubContext
+from constants import USER_FOLDER
 from users_code_parser import UsersCodeParser
 
 # add the user's folder to the path, this is a dependency to everything else

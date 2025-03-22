@@ -1,4 +1,5 @@
 from github import GithubContext
+from users_code_parser import UsersCodeParser
 
 # imports the ABC meant as interface with the user's code
 from pr_automation_template import PRAutomationTemplate

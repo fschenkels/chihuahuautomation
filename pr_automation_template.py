@@ -1,6 +1,6 @@
 import logging
 
-from framework.github import GithubContext
+from github import GithubContext
 
 class PRAutomationTemplate(GithubContext):
     def __init__(self):

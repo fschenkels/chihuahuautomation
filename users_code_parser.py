@@ -8,7 +8,7 @@ import importlib
 from constants import USER_FOLDER
 
 # imports the ABC meant as interface with the user's code
-from framework.pr_automation_template import PRAutomationTemplate
+from pr_automation_template import PRAutomationTemplate
 
 class UsersCodeParser:
     ABCs = [

@@ -6,7 +6,7 @@ import logging
 import importlib
 
 from constants import USER_FOLDER
-from github import GithubEvenHandler
+from event_handler import GithubEventHandler
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",

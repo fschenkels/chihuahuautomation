@@ -48,6 +48,8 @@ class UsersCodeParser:
                 ]
 
                 logging.debug(f"implementations found: {str(implementations_found)}")
-                classes_and_modules[abc] = implementations_found
+                current_list = classes_and_modules.get(abc, [])
+                current_list.extend(implementations_found)
+                classes_and_modules[abc] = current_list
         return classes_and_modules
 

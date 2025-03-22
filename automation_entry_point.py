@@ -19,4 +19,4 @@ sys.path.insert(0, USER_FOLDER)
 if __name__ == "__main__":
     logging.debug(f"current dir is: {os.getcwd()}")
 
-    GithubEventHandler.process_event()
+    GithubEventHandler().process_event()

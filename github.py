@@ -1,4 +1,5 @@
 import os
+import logging # TODO
 
 class GithubContext:
     """Github context info"""

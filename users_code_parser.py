@@ -16,7 +16,7 @@ class UsersCodeParser:
     ]
 
     def __init__(self):
-        self.classes_and_modules = UsersCodeParser.parse_classes_and_modules()
+        self.classes_and_modules = self.__parse_classes_and_modules()
 
     def get_implementations_of(abc):
         return [
@@ -25,8 +25,7 @@ class UsersCodeParser:
             )
         ]
 
-    @staticmethod
-    def parse_classes_and_modules():
+    def __parse_classes_and_modules(self):
         """Parses the user's concrete classes and their respective modules"""
         
         classes_and_modules = dict()

@@ -1,8 +1,11 @@
 from github import GithubContext
 from users_code_parser import UsersCodeParser
 
+# add the user's folder to the path, this is a dependency to everything else
+sys.path.insert(0, USER_FOLDER)
+
 # imports the ABC meant as interface with the user's code
-from pr_automation_template import PRAutomationTemplate
+from framework.pr_automation_template import PRAutomationTemplate
 
 class GithubEventHandler:
     """Handles Github events"""

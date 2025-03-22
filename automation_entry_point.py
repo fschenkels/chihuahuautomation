@@ -1,9 +1,6 @@
 import os
 import sys
-import glob
-import inspect
 import logging
-import importlib
 
 from constants import USER_FOLDER
 from event_handler import GithubEventHandler

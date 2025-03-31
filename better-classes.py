@@ -1,6 +1,7 @@
 @dataclass
 class Event:
     context: dict
+    # TODO: type: str = ""
 
     def define_event_type(self):
         pass
@@ -47,10 +48,15 @@ class EventsFactory:
     def __extract_vendor_from_context(self, context)
         pass
 
-    def generate_event(self, context):
+    def generate_event(self):
+        # TODO: context = os.environ.get( 
         if not self.vendor:
             self.vendor = self.__extract_vendor_from_context(context)
-        return self.available_events[self.vendor]()
+        return self.available_events[
+            self.vendor
+        ](
+            context=context
+        )
 
 class EventsProcessor:
     def __init__(self):

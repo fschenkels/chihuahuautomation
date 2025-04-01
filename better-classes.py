@@ -35,6 +35,12 @@ class AzureEvent(Event)
     pass
 
 
+class ExecutableEvent(Event):
+    pass
+
+class PRAutomationTemplate(ExecutableEvent):
+    pass
+
 class EventsFactory:
     def __init__(self):
         self.vendor = self.__verify_vendors_environment()

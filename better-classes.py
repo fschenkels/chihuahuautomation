@@ -6,6 +6,9 @@ class Event:
     def define_event_type(self):
         pass
 
+    def process(self):
+        pass
+
     @property
     def is_push(self):
         self.define_event_type()
@@ -20,6 +23,7 @@ class Event:
     def is_scheduled(self):
         self.define_event_type()
         return self.type == "scheduled"
+
 
 class GithubEvent(Event)
     pass
@@ -68,4 +72,4 @@ class EventsProcessor:
                 [PRAutomationTemplate]
             )
         for cls in classes_to_run:
-            cls.run()
+            cls.process()

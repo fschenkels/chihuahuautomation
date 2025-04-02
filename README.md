@@ -1,4 +1,4 @@
-# repo-automation
+# chihuahuautomation
 
 This is repo is still at its initial state. Once I get a minimally functional version I will document it properly.
 

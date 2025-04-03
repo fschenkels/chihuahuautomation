@@ -6,9 +6,6 @@ class Event:
     def define_event_type(self):
         pass
 
-    def process(self):
-        pass
-
     @property
     def is_push(self):
         self.define_event_type()
@@ -24,21 +21,35 @@ class Event:
         self.define_event_type()
         return self.type == "scheduled"
 
-
-class GithubEvent(Event)
-    pass
-
-class GitlabEvent(Event)
-    pass
-
-class AzureEvent(Event)
-    pass
-
-
 class ExecutableEvent(Event):
+    def execute(self):
+        pass
+
+class GithubPREvent(ExecutableEvent)
     pass
 
-class PRAutomationTemplate(ExecutableEvent):
+class GitlabExecutableEvent(ExecutableEvent)
+    pass
+
+class AzureExecutableEvent(ExecutableEvent)
+    pass
+
+
+class PRAutomationTemplate:
+    def pr_open(self):
+        """Executed whenever a new PR is created"""
+        pass
+
+    def pr_updated(self):
+        """Executed whenever a PR is updated"""
+        pass
+
+    def pr_closed(self):
+        """Executed whenever a PR is closed"""
+        pass
+
+
+class GithubPRAutomationTemplate(GithubPREvent, PRAutomationTemplate):
     pass
 
 class EventsFactory:
@@ -71,6 +82,7 @@ class EventsFactory:
 class EventsProcessor:
     def __init__(self):
         self.userscode = UsersCodeParser()
+
 
     def process(self, event):
         if event.is_pr:

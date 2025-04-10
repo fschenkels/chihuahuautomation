@@ -1,39 +1,51 @@
-@dataclass
-class Event:
-    context: dict
-    # TODO: type: str = ""
+from enum import Enum
 
-    def define_event_type(self):
-        pass
+class EventType(Enum):
+    PUSH = 1
+    PULL_REQUEST = 2
+    SCHEDULED = 3
+
+class PullRequestType(Enum):
+    OPENED = 1
+    UPDATED = 2
+    CLOSED = 3
+
+class Vendor(Enum):
+    GITHUB = 1
+    GITLAB = 2
+    AZURE = 3
+
+class Event:
+    def __init__(
+        self,
+        context: dict,
+    ):
+        self.context = context
+        # TODO: parse it
+        self.etype = EventType.PUSH
+        self.vendor = Vendor.GITHUB
 
     @property
     def is_push(self):
-        self.define_event_type()
-        return self.type == "push"
+        return EventType.PUSH == self.etype
 
     @property
     def is_pr(self):
-        self.define_event_type()
-        return self.type == "pr"
+        return EventType.PULL_REQUEST == self.etype
 
     @property
     def is_scheduled(self):
-        self.define_event_type()
-        return self.type == "scheduled"
+        return EventType.SCHEDULED == self.etype
 
 class ExecutableEvent(Event):
+    def __init__(
+        self,
+        context: dict,
+    ):
+        super().__init__(context)
+
     def execute(self):
         pass
-
-class GithubPREvent(ExecutableEvent)
-    pass
-
-class GitlabExecutableEvent(ExecutableEvent)
-    pass
-
-class AzureExecutableEvent(ExecutableEvent)
-    pass
-
 
 class PRAutomationTemplate:
     def pr_open(self):
@@ -48,9 +60,50 @@ class PRAutomationTemplate:
         """Executed whenever a PR is closed"""
         pass
 
+class PullRequestExecutableEvent(ExecutableEvent):
+    def __init__(
+        self,
+        context: dict,
+        template: PRAutomationTemplate,
+    ):
+        ExecutableEvent.__init__(context)
+        self.subtype = PullRequestType.UPDATED
+        self.parse_subtype()
+        self.template = template
+        self.template.context = context
 
-class GithubPRAutomationTemplate(GithubPREvent, PRAutomationTemplate):
-    pass
+    def execute(self):
+        if PullRequestType.OPENED == self.subtype:
+            self.template.pr_open()
+        elif PullRequestType.UPDATED == self.subtype:
+            self.template.pr_updated()
+        else:
+            self.template.pr_closed()
+
+    def parse_subtype(self):
+        pass
+
+class GithubPRExecutableEvent(PullRequestExecutableEvent):
+    def __init__(
+        self,
+        context: dict,
+        template: PRAutomationTemplate,
+    ):
+        super().__init__(
+            context,
+            template
+        )
+
+    def parse_subtype(self):
+        # concrete implementation
+        pass
+
+    @classmethod
+    def from_event_and_template(cls, event, template):
+        return cls(
+            context = context
+            template = template 
+        )
 
 class EventsFactory:
     def __init__(self):
@@ -82,7 +135,6 @@ class EventsFactory:
 class EventsProcessor:
     def __init__(self):
         self.userscode = UsersCodeParser()
-
 
     def process(self, event):
         if event.is_pr:

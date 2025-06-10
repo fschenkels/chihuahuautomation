@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+//#![feature(unboxed_closures)]
 
 #[derive(Debug)]
 enum EventType {
@@ -15,45 +16,36 @@ enum Vendor {
 }
 
 #[derive(Debug)]
-enum Routine<F: Fn()> {
-    Push(F),
-    PullRequest(F),
-    Scheduled(F)
-}
-
-#[derive(Debug)]
-struct Event<F: Fn()> {
+struct Event<F: Fn(&mut String) -> String> {
     context: String,
     etype: EventType,
     vendor: Vendor,
-    routines: Vec<Routine<F>>
+    routine: F
 }
 
 trait Executable {
-    fn get_type(&self) -> EventType;
+    fn execute(&mut self) -> String;
+}
 
-    fn execute(&mut self) {
-        match self.get_type() {
-            EventType::Push => {},
-            EventType::PullRequest => {},
-            EventType::Scheduled => {},
-        }
+impl<F: Fn(&mut String) -> String> Executable for Event<F> {
+    fn execute(&mut self) -> String {
+        (self.routine)(&mut self.context)
     }
 }
 
-fn a_routine<F: Fn()>(e: &mut Event<F>) {
-    println!("Hello, world!");
-    println!("Processing a {:?} event", e.etype);
+fn routine_1(context: &mut String) -> String {
+    println!("routine for context '{}'", context);
+    String::new()
 }
+
 
 fn main() {
     let mut event = Event {
         context: String::from("some context here"),
         etype: EventType::Push,
         vendor: Vendor::Github,
-        routines: vec![Routine::Push(a_routine)]
-        //routine: a_routine,
+        routine: routine_1
     };
     
-    //(event.routine)(&mut event);
+    event.execute();
 }

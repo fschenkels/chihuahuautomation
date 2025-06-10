@@ -15,14 +15,33 @@ enum Vendor {
 }
 
 #[derive(Debug)]
-struct Event {
+enum Routine<F: Fn()> {
+    Push(F),
+    PullRequest(F),
+    Scheduled(F)
+}
+
+#[derive(Debug)]
+struct Event<F: Fn()> {
     context: String,
     etype: EventType,
     vendor: Vendor,
-    routine: fn(&mut Event)
+    routines: Vec<Routine<F>>
 }
 
-fn a_routine(e: &mut Event) {
+trait Executable {
+    fn get_type(&self) -> EventType;
+
+    fn execute(&mut self) {
+        match self.get_type() {
+            EventType::Push => {},
+            EventType::PullRequest => {},
+            EventType::Scheduled => {},
+        }
+    }
+}
+
+fn a_routine<F: Fn()>(e: &mut Event<F>) {
     println!("Hello, world!");
     println!("Processing a {:?} event", e.etype);
 }
@@ -32,8 +51,9 @@ fn main() {
         context: String::from("some context here"),
         etype: EventType::Push,
         vendor: Vendor::Github,
-        routine: a_routine,
+        routines: vec![Routine::Push(a_routine)]
+        //routine: a_routine,
     };
     
-    (event.routine)(&mut event);
+    //(event.routine)(&mut event);
 }

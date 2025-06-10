@@ -8,6 +8,8 @@ enum EventType {
 }
 
 #[derive(Debug)]
+#[derive(Copy)]
+#[derive(Clone)]
 enum Vendor {
     Github,
     Gitlab,
@@ -54,25 +56,25 @@ struct Platform {
 }
 
 trait EventsFactory {
-    fn generate_event(
-        self,
-        context: String,
-    ) -> Event;
-}
+    fn get_vendor(&self) -> Vendor;
 
-impl EventsFactory for Platform {
     fn generate_event(
-        self,
+        &self,
         context: String,
     ) -> Event {
         Event {
             context: context,
             etype: EventType::Push,
-            vendor: self.vendor,
+            vendor: self.get_vendor(),
             routines: vec![Routine::Push(routine_1)]
         }
     }
-    
+}
+
+impl EventsFactory for Platform {
+    fn get_vendor(&self) -> Vendor {
+        self.vendor
+    }
 }
 
 fn main() {

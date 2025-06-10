@@ -1,5 +1,4 @@
 #![allow(dead_code)]
-//#![feature(unboxed_closures)]
 
 #[derive(Debug)]
 enum EventType {
@@ -15,37 +14,73 @@ enum Vendor {
     Azure
 }
 
+
 #[derive(Debug)]
-struct Event<F: Fn(&mut String) -> String> {
+enum Routine {
+    Push(fn(String) -> String),
+    PullRequest(fn(String) -> String),
+    Scheduled(fn(String) -> String)
+}
+
+#[derive(Debug)]
+struct Event {
     context: String,
     etype: EventType,
     vendor: Vendor,
-    routine: F
+    routines: Vec<Routine>
 }
 
 trait Executable {
-    fn execute(&mut self) -> String;
+    fn execute(self) -> String;
 }
 
-impl<F: Fn(&mut String) -> String> Executable for Event<F> {
-    fn execute(&mut self) -> String {
-        (self.routine)(&mut self.context)
+impl Executable for Event {
+    fn execute(self) -> String {
+        match self.routines[0] {
+            Routine::Push(r) => (r)(self.context),
+            Routine::PullRequest(r) => (r)(self.context),
+            Routine::Scheduled(r) => (r)(self.context)
+        }
     }
 }
 
-fn routine_1(context: &mut String) -> String {
+fn routine_1(context: String) -> String {
     println!("routine for context '{}'", context);
     String::new()
 }
 
+struct Platform {
+    vendor: Vendor
+}
+
+trait EventsFactory {
+    fn generate_event(
+        self,
+        context: String,
+    ) -> Event;
+}
+
+impl EventsFactory for Platform {
+    fn generate_event(
+        self,
+        context: String,
+    ) -> Event {
+        Event {
+            context: context,
+            etype: EventType::Push,
+            vendor: self.vendor,
+            routines: vec![Routine::Push(routine_1)]
+        }
+    }
+    
+}
 
 fn main() {
-    let mut event = Event {
-        context: String::from("some context here"),
-        etype: EventType::Push,
-        vendor: Vendor::Github,
-        routine: routine_1
+    let mut plat = Platform {
+        vendor: Vendor::Github
     };
     
-    event.execute();
+    plat.generate_event(
+        String::from("fuezito")
+    ).execute();
 }

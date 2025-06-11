@@ -33,21 +33,33 @@ struct Event {
 }
 
 trait Executable {
-    fn execute(self) -> String;
-}
+    fn get_type(&self) -> EventType;
+    fn get_routines(&self) -> Vec<Routine>;
 
-impl Executable for Event {
-    fn execute(self) -> String {
-        match self.routines[0] {
-            Routine::Push(r) => (r)(self.context),
-            Routine::PullRequest(r) => (r)(self.context),
-            Routine::Scheduled(r) => (r)(self.context)
-        }
+    fn execute(&self) -> String {
+        let to_run: Vec<Routine> = self.get_routines().iter().filter(
+            |&f| std::mem::discriminant(&self.get_type()) == std::mem::discriminant(f)
+        ).collect();
     }
 }
 
-fn routine_1(context: String) -> String {
-    println!("routine for context '{}'", context);
+impl Executable for Event {
+    fn get_type(&self) -> EventType {
+        self.etype
+    }
+    
+    fn get_routines(&self) -> Vec<Routine> {
+        self.routines
+    }
+}
+
+fn routine_for_push(context: String) -> String {
+    println!("routine for push with context '{}'", context);
+    String::new()
+}
+
+fn routine_for_prs(context: String) -> String {
+    println!("routine for PRs with context '{}'", context);
     String::new()
 }
 
@@ -66,7 +78,7 @@ trait EventsFactory {
             context: context,
             etype: EventType::Push,
             vendor: self.get_vendor(),
-            routines: vec![Routine::Push(routine_1)]
+            routines: vec![Routine::Push(routine_for_push), Routine::Push(routine_for_prs)]
         }
     }
 }
@@ -86,3 +98,4 @@ fn main() {
         String::from("fuezito")
     ).execute();
 }
+

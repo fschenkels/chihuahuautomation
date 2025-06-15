@@ -1,3 +1,5 @@
+use std::mem;
+
 #![allow(dead_code)]
 
 #[derive(Debug)]
@@ -16,6 +18,14 @@ enum Vendor {
     Azure
 }
 
+// mem::discriminant
+impl Into<Routine> for EventType {
+    fn into(self) -> Routine {
+        match self {
+
+        }
+    }
+}
 
 #[derive(Debug)]
 enum Routine {
@@ -23,6 +33,8 @@ enum Routine {
     PullRequest(fn(String) -> String),
     Scheduled(fn(String) -> String)
 }
+
+
 
 #[derive(Debug)]
 struct Event {

@@ -1,6 +1,6 @@
-use std::mem;
-
 #![allow(dead_code)]
+
+type Callback = fn(String) -> String;
 
 #[derive(Debug)]
 enum EventType {
@@ -18,87 +18,26 @@ enum Vendor {
     Azure
 }
 
-// mem::discriminant
-impl Into<Routine> for EventType {
-    fn into(self) -> Routine {
-        match self {
-
-        }
-    }
-}
-
-#[derive(Debug)]
-enum Routine {
-    Push(fn(String) -> String),
-    PullRequest(fn(String) -> String),
-    Scheduled(fn(String) -> String)
-}
-
-
-
 #[derive(Debug)]
 struct Event {
     context: String,
     etype: EventType,
     vendor: Vendor,
-    routines: Vec<Routine>
+    routines: Vec<Callback>
 }
 
-trait Executable {
-    fn get_type(&self) -> EventType;
-    fn get_routines(&self) -> Vec<Routine>;
-
-    fn execute(&self) -> String {
-        let to_run: Vec<Routine> = self.get_routines().iter().filter(
-            |&f| std::mem::discriminant(&self.get_type()) == std::mem::discriminant(f)
-        ).collect();
-    }
+#[derive(Debug)]
+struct EventsEngine {
+    registered_routines: Routines,
+    queued: Vec<Event>
+    alive: Vec<Event>,
 }
 
-impl Executable for Event {
-    fn get_type(&self) -> EventType {
-        self.etype
-    }
-    
-    fn get_routines(&self) -> Vec<Routine> {
-        self.routines
-    }
-}
-
-fn routine_for_push(context: String) -> String {
-    println!("routine for push with context '{}'", context);
-    String::new()
-}
-
-fn routine_for_prs(context: String) -> String {
-    println!("routine for PRs with context '{}'", context);
-    String::new()
-}
-
-struct Platform {
-    vendor: Vendor
-}
-
-trait EventsFactory {
-    fn get_vendor(&self) -> Vendor;
-
-    fn generate_event(
-        &self,
-        context: String,
-    ) -> Event {
-        Event {
-            context: context,
-            etype: EventType::Push,
-            vendor: self.get_vendor(),
-            routines: vec![Routine::Push(routine_for_push), Routine::Push(routine_for_prs)]
-        }
-    }
-}
-
-impl EventsFactory for Platform {
-    fn get_vendor(&self) -> Vendor {
-        self.vendor
-    }
+#[derive(Debug)]
+struct Routines {
+    push: Vec<Callback>,
+    pull_request: Vec<Callback>
+    scheduled: Vec<Callback>,
 }
 
 fn main() {

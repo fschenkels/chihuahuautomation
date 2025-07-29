@@ -1,3 +1,4 @@
+
 #![allow(dead_code)]
 
 use std::collections::VecDeque;
@@ -45,24 +46,17 @@ struct Event {
 #[derive(Debug)]
 struct EventsEngine {
     registered_routines: Routines,
-    queued: Vec<Event>
-    alive: Vec<Event>,
+    queued: VecDeque<Event>,
+    alive: VecDeque<Event>,
 }
 
 #[derive(Debug)]
 struct Routines {
-    push: VecDeque<Callback>,
-    pull_request: VecDeque<Callback>,
-    scheduled: VecDeque<Callback>,
+    push: Vec<Callback>,
+    pull_request: Vec<Callback>,
+    scheduled: Vec<Callback>,
 }
 
 fn main() {
-    let mut plat = Platform {
-        vendor: Vendor::Github
-    };
-    
-    plat.generate_event(
-        String::from("fuezito")
-    ).execute();
+    print!("fue");
 }
-

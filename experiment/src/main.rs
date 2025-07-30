@@ -17,7 +17,7 @@ use serde_json::Value;
 //    }
 //}
 
-type Callback = fn(String) -> String;
+type Callback = fn(Value) -> Result<String, String>;
 
 #[derive(Debug)]
 enum EventType {
@@ -58,10 +58,8 @@ struct EventsEngine {
 }
 
 impl EventsEngine {
-    fn intake(self, context: String) -> Result<String, String> {
-        print!("received context:\n{}\n", context);
-        let v: Value = serde_json::from_str(&context).unwrap();
-        println!("Execution id {}", v["run_id"]);
+    fn intake(self, context: Value) -> Result<String, String> {
+        println!("Execution id {}", context["run_id"]);
         Ok(String::from("It worked \\0/"))
     }
 }
@@ -72,7 +70,8 @@ fn main() {
         queued: None,
         alive: None,
     };
-    eng.intake(r###"
+
+    let input_example = r###"
 {
   "token": "***",
   "job": "dump_contexts_to_log",
@@ -104,6 +103,10 @@ fn main() {
   "action_ref": "",
   "path": "/home/runner/work/_temp/_runner_file_commands/add_path_b037e7b5-1c88-48e2-bf78-eaaab5e02602",
   "env": "/home/runner/work/_temp/_runner_file_commands/set_env_b037e7b5-1c88-48e2-bf78-eaaab5e02602"
-}"###.to_string());
+}"###.to_string();
+
+    eng.intake(
+        serde_json::from_str(&input_example).unwrap()
+    ).unwrap();
     ()
 }

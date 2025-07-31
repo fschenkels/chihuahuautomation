@@ -52,12 +52,24 @@ struct Routines {
 
 #[derive(Debug)]
 struct EventsEngine {
-    registered_routines: Option<Routines>,
-    queued: Option<VecDeque<Event>>,
-    alive: Option<VecDeque<Event>>,
+    registered_routines: Routines,
+    queued: VecDeque<Event>,
+    alive: VecDeque<Event>,
 }
 
 impl EventsEngine {
+    fn new() -> EventsEngine {
+        EventsEngine {
+            registered_routines: Routines {
+                push: Vec::new(),
+                pull_request: Vec::new(),
+                scheduled: Vec::new(),
+            },
+            queued: VecDeque::new(),
+            alive: VecDeque::new(),
+        }
+    }
+    
     fn intake(self, context: Value) -> Result<String, String> {
         println!("Execution id {}", context["run_id"]);
         Ok(String::from("It worked \\0/"))
@@ -65,11 +77,7 @@ impl EventsEngine {
 }
 
 fn main() {
-    let eng = EventsEngine {
-        registered_routines: None,
-        queued: None,
-        alive: None,
-    };
+    let eng: EventsEngine = EventsEngine::new();
 
     let input_example = r###"
 {

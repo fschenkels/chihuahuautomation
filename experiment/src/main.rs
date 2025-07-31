@@ -3,19 +3,6 @@
 
 use std::collections::VecDeque;
 use serde_json::Value;
-//fn main() {
-//    let mut queue: VecDeque<i32> = VecDeque::new();
-
-//    // Enqueue elements
-//    queue.push_back(1);
-//    queue.push_back(2);
-//    queue.push_back(3);
-
-//    // Dequeue elements
-//    while let Some(item) = queue.pop_front() {
-//        println!("Dequeued: {}", item);
-//    }
-//}
 
 type Callback = fn(Value) -> Result<String, String>;
 

@@ -23,7 +23,19 @@ type Callback = fn(Value) -> Result<String, String>;
 enum EventType {
     Push,
     PullRequest,
-    Scheduled
+    Scheduled,
+    Unknown
+}
+
+impl From<&str> for EventType {
+    fn from(description: &str) -> Self {
+        match description {
+            "push" => EventType::Push,
+            "pull_request" => EventType::PullRequest,
+            "schedule" => EventType::Scheduled,
+            _ => EventType::Unknown,
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -37,10 +49,19 @@ enum Vendor {
 
 #[derive(Debug)]
 struct Event {
-    context: String,
+    context: Value,
     etype: EventType,
     vendor: Vendor,
-    routines: Vec<Callback>,
+}
+
+impl From<Value> for Event {
+    fn from(json: Value) -> Self {
+        Event {
+            etype: EventType::from(json["event_name"].as_str().unwrap()),
+            vendor: Vendor::Github,
+            context: json,
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -70,8 +91,8 @@ impl EventsEngine {
         }
     }
     
-    fn intake(self, context: Value) -> Result<String, String> {
-        println!("Execution id {}", context["run_id"]);
+    fn intake(mut self, context: Value) -> Result<String, String> {
+        self.queued.push_back(Event::from(context));
         Ok(String::from("It worked \\0/"))
     }
 }
@@ -79,7 +100,7 @@ impl EventsEngine {
 fn main() {
     let eng: EventsEngine = EventsEngine::new();
 
-    let input_example = r###"
+    let input_example: String = r###"
 {
   "token": "***",
   "job": "dump_contexts_to_log",
@@ -113,8 +134,10 @@ fn main() {
   "env": "/home/runner/work/_temp/_runner_file_commands/set_env_b037e7b5-1c88-48e2-bf78-eaaab5e02602"
 }"###.to_string();
 
+    //let json: Value = serde_json::from_str(&input_example).unwrap();
     eng.intake(
         serde_json::from_str(&input_example).unwrap()
     ).unwrap();
+    println!("It worked \\0/");
     ()
 }

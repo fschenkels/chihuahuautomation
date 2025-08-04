@@ -1,5 +1,5 @@
-use std::collections::VecDeque;
 use serde_json::Value;
+use std::collections::VecDeque;
 
 pub type Callback = fn(Value) -> Result<String, String>;
 
@@ -8,7 +8,7 @@ pub enum EventType {
     Push,
     PullRequest,
     Scheduled,
-    Unknown
+    Unknown,
 }
 
 impl From<&str> for EventType {
@@ -22,13 +22,11 @@ impl From<&str> for EventType {
     }
 }
 
-#[derive(Debug)]
-#[derive(Copy)]
-#[derive(Clone)]
+#[derive(Debug, Copy, Clone)]
 enum Vendor {
     Github,
     Gitlab,
-    Azure
+    Azure,
 }
 
 #[derive(Debug)]
@@ -74,13 +72,12 @@ impl EventsEngine {
             alive: VecDeque::new(),
         }
     }
-    
+
     fn intake(mut self, context: Value) -> Result<String, String> {
         self.queued.push_back(Event::from(context));
         Ok(String::from("It worked \\0/"))
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -111,11 +108,10 @@ mod tests {
           "env": "/home/runner/work/_temp/_runner_file_commands/set_env_b037e7b5-1c88-48e2-bf78-eaaab5e02602"
         }"###;
 
-
     #[test]
     fn does_it_work() {
-        EventsEngine::new().intake(
-            serde_json::from_str(&input_example.to_string()).unwrap()
-        ).unwrap();
+        EventsEngine::new()
+            .intake(serde_json::from_str(&input_example.to_string()).unwrap())
+            .unwrap();
     }
 }
